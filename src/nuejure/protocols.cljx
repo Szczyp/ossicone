@@ -18,7 +18,7 @@
   PersistentArrayMap
   (mapf [this f] (into (empty this) (map (fn [[k v]] [k (f v)]) this)))
   #+clj Fn #+cljs function
-  (mapf [this f] (comp this f)))
+  (mapf [this f] (comp f this)))
 
 (defprotocol Applicative
   (return [this a])
@@ -33,7 +33,10 @@
   (ap [this that] (vec (for [f this a that] (f a))))
   LazySeq
   (return [this a] (lazy-seq (list a)))
-  (ap [this that] (for [f this a that] (f a))))
+  (ap [this that] (for [f this a that] (f a)))
+  #+clj Fn #+cljs function
+  (return [this f] (constantly f))
+  (ap [this that] #((this %) (that %)))))
 
 (defprotocol Monad
   (join [this]))
