@@ -47,4 +47,6 @@
   PersistentVector
   (join [this] (vec (apply concat this)))
   LazySeq
-  (join [this] (apply concat this)))
+  (join [this] (apply concat this))
+  #+clj Fn #+cljs function
+  (join [this] #((this %) %)))
