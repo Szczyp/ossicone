@@ -12,5 +12,3 @@
 (defmacro curry
   ([n f] (make-curried n f []))
   ([f] (make-curried 2 f [])))
-
-(def lazy-map map)
