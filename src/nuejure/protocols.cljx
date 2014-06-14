@@ -45,18 +45,3 @@
   (join [this] (vec (apply concat this)))
   LazySeq
   (join [this] (apply concat this)))
-
-(deftype Return [value]
-  Functor
-  (mapf [this f] (Return. (f value)))
-  Applicative
-  (return [this a] (Return. a))
-  (ap [this a] (if (= (type a) Return)
-                   (Return. (value (.value a)))
-                   (ap (return a value) a)))
-  Monad
-  (join [this] (.value this))
-  Object
-  (toString [this] (str value)))
-
-(defn return? [a] (= (type a) Return))
