@@ -36,7 +36,7 @@
   (ap [this that] (for [f this a that] (f a)))
   #+clj Fn #+cljs function
   (return [this f] (constantly f))
-  (ap [this that] #((this %) (that %)))))
+  (ap [this that] #((this %) (that %))))
 
 (defprotocol Monad
   (join [this]))

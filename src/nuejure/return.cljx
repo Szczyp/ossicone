@@ -7,10 +7,10 @@
   p/Applicative
   (return [this a] (Return. a))
   (ap [this a] (if (= (type a) Return)
-                   (Return. (value (.value a)))
+                   (Return. (value (#+clj .value #+cljs .-value a)))
                    (p/ap (p/return a value) a)))
   p/Monad
-  (join [this] (.value this))
+  (join [this] value)
   Object
   (toString [this] (str value)))
 
