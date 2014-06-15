@@ -32,7 +32,7 @@
   ([m f]
      (let [coerce-return #(if (r/return? %)
                             (p/return m (#+clj .value #+cljs .-value %)) %)]
-       (p/join (p/mapf m (comp coerce-return f)))))
+       (p/join (mapf (comp coerce-return f) m))))
   ([m f & fs] (apply bind (bind m f) fs)))
 
 (defmacro mdo [bindings body]

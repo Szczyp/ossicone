@@ -39,5 +39,4 @@
     :cljsbuild {:builds [{:source-paths ["target/classes" "target/test-classes"]
                           :compiler {:output-to "target/testable.js"
                                      :optimizations :simple}}]
-                :test-commands {"phantom" ["phantomjs" :runner "target/testable.js"]}}
-    :main nuejure}})
+                :test-commands {"phantom" ["phantomjs" :runner "target/testable.js"]}}}})
