@@ -1,4 +1,5 @@
 (ns nuejure.state
+  (:refer-clojure :exclude [get])
   (:require
    [nuejure.protocols :as p]))
 
@@ -34,8 +35,9 @@
   (state (fn [s] [s s])))
 
 (defn modify [f]
-  (state (fn [s] (let [s (f s)]
-                         [s s]))))
+  (state (fn [s]
+           (let [s (f s)]
+             [s s]))))
 
 (defn put [s]
   (state (fn [_] [s s])))
