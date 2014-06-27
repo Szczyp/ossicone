@@ -43,6 +43,6 @@
         (if (= sym :let)
           `(let ~val ~cont)
           `(bind ~val (fn [~sym] ~cont))))
-      `(return ~body))
+      body)
     (throw (IllegalArgumentException.
             "bindings has to be a vector with even number of elements."))))
