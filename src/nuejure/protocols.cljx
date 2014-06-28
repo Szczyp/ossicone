@@ -1,7 +1,7 @@
 (ns nuejure.protocols
   #+clj (:import
          [clojure.lang PersistentList PersistentVector LazySeq
-          PersistentHashMap PersistentArrayMap Fn]))
+          PersistentHashMap PersistentArrayMap Fn Keyword]))
 
 (defprotocol Functor
   (mapf [this f]))
@@ -18,6 +18,8 @@
   PersistentArrayMap
   (mapf [this f] (into (empty this) (map (fn [[k v]] [k (f v)]) this)))
   #+clj Fn #+cljs function
+  (mapf [this f] (comp f this))
+  Keyword
   (mapf [this f] (comp f this)))
 
 (defprotocol Applicative
@@ -36,6 +38,9 @@
   (ap [this that] (for [f this a that] (f a)))
   #+clj Fn #+cljs function
   (return [this f] (constantly f))
+  (ap [this that] #((this %) (that %)))
+  Keyword
+  (return [this f] (constantly f))
   (ap [this that] #((this %) (that %))))
 
 (defprotocol Monad
@@ -49,4 +54,6 @@
   LazySeq
   (join [this] (apply concat this))
   #+clj Fn #+cljs function
+  (join [this] #((this %) %))
+  Keyword
   (join [this] #((this %) %)))
