@@ -6,27 +6,19 @@
 (defn flip [f & [a b & rs]]
   (apply f b a rs))
 
-(defn- make-curried [n f args]
-  (if (= n 0)
-    `(~f ~@args)
-    (let [a# (gensym)]
-      `(fn [~a#] ~(make-curried (dec n) f (conj args a#))))))
-
-(defmacro curry
-  ([n f] (make-curried n f []))
-  ([f] (make-curried 2 f [])))
-
 (def return r/->Return)
 
-(defn ap
-  ([f a] (if (r/return? a)
-           (p/ap f (p/return f (#+clj .value #+cljs .-value a)))
-           (p/ap f a)))
-  ([f a & as] (apply ap (ap f a) as)))
+(defn ap [f & as]
+  (letfn [(ap ([f a] (if (r/return? a)
+                       (p/ap f (p/return f (#+clj .value #+cljs .-value a)))
+                       (p/ap f a)))
+            ([f a & as] (apply ap (ap f a) as)))
+          (curry [n f] ((apply partial (replicate n partial)) f))]
+    (apply ap (p/mapf f (partial curry (count as))) as)))
 
 (defn mapf
   ([f a] (p/mapf a f))
-  ([f a & as] (apply ap (mapf f a) as)))
+  ([f a & as] (apply ap (mapf (partial partial f) a) as)))
 
 (defn bind
   ([m f]

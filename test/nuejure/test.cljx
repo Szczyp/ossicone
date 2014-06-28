@@ -1,13 +1,13 @@
 (ns nuejure.test
   #+clj (:require
          [clojure.test :as t :refer [is deftest with-test run-tests testing]]
-         [nuejure.core :refer [mapf return ap bind curry mdo]]
+         [nuejure.core :refer [mapf return ap bind mdo]]
          [nuejure.reader :as reader]
          [nuejure.state :as state]
          [nuejure.app :as app])
   #+cljs (:require-macros
-          [cemerick.cljs.test :refer [is deftest with-test run-tests testing test-var]]
-          [nuejure.core :refer [curry mdo]])
+          [cemerick.cljs.test :refer [is deftest with-test run-tests testing]]
+          [nuejure.core :refer [mdo]])
   #+cljs (:require
           [cemerick.cljs.test :as t]
           [nuejure.core :refer [mapf return ap bind]]
@@ -20,11 +20,11 @@
     (is (= -21 (let [f (mdo [a inc
                              b (partial * 2)
                              :let [c (dec (- b a))]
-                             d (mapf (curry +) dec (partial * 3))
+                             d (mapf + dec (partial * 3))
                              e (return 1)]
-                            (if (even? d)
-                              (return (+ a b c d e))
-                              (return (- e d c b a))))]
+                            (return (if (even? d)
+                                      (+ a b c d e)
+                                      (- e d c b a))))]
                  (f 3)))))
 
   (testing "reader test"
