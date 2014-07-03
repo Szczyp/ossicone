@@ -1,7 +1,8 @@
 (ns nuejure.protocols
   #+clj (:import
          [clojure.lang PersistentList PersistentVector LazySeq
-          PersistentHashMap PersistentArrayMap Fn Keyword]))
+          PersistentHashMap PersistentArrayMap Fn Keyword
+          PersistentHashSet PersistentTreeSet]))
 
 (defprotocol Functor
   (mapf [this f]))
@@ -14,9 +15,13 @@
   LazySeq
   (mapf [this f] (map f this))
   PersistentHashMap
-  (mapf [this f] (into (empty this) (map (fn [[k v]] [k (f v)]) this)))
+  (mapf [this f] (into (hash-map) (map (fn [[k v]] [k (f v)]) this)))
   PersistentArrayMap
-  (mapf [this f] (into (empty this) (map (fn [[k v]] [k (f v)]) this)))
+  (mapf [this f] (into (sorted-map) (map (fn [[k v]] [k (f v)]) this)))
+  PersistentHashSet
+  (mapf [this f] (into (hash-set) (map f this)))
+  PersistentTreeSet
+  (mapf [this f] (into (sorted-set) (reverse (map f this))))
   #+clj Fn #+cljs function
   (mapf [this f] (comp f this))
   Keyword
@@ -36,6 +41,9 @@
   LazySeq
   (return [this a] (lazy-seq (list a)))
   (ap [this that] (for [f this a that] (f a)))
+  PersistentHashSet
+  (return [this a] (hash-set a))
+  (ap [this that] (apply hash-set (for [f this a that] (f a))))
   #+clj Fn #+cljs function
   (return [this f] (constantly f))
   (ap [this that] #((this %) (that %)))
@@ -53,6 +61,8 @@
   (join [this] (vec (apply concat this)))
   LazySeq
   (join [this] (apply concat this))
+  PersistentHashSet
+  (join [this] (apply hash-set (apply concat this)))
   #+clj Fn #+cljs function
   (join [this] #((this %) %))
   Keyword
