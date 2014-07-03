@@ -2,18 +2,14 @@
   #+clj (:require
          [clojure.test :as t :refer [is deftest with-test run-tests testing]]
          [nuejure.core :refer [mapf return ap bind mdo]]
-         [nuejure.reader :as reader]
-         [nuejure.state :as state]
-         [nuejure.app :as app])
+         [nuejure.effect :refer [env state local out put modify run]])
   #+cljs (:require-macros
           [cemerick.cljs.test :refer [is deftest with-test run-tests testing]]
           [nuejure.core :refer [mdo]])
   #+cljs (:require
           [cemerick.cljs.test :as t]
           [nuejure.core :refer [mapf return ap bind]]
-          [nuejure.reader :as reader]
-          [nuejure.state :as state]
-          [nuejure.app :as app]))
+          [nuejure.effect :refer [env state local out put modify run]]))
 
 (deftest a-test
   (testing "a test"
@@ -27,26 +23,12 @@
                                       (- e d c b a))))]
                  (f 3)))))
 
-  (testing "reader test"
-    (is (= 1 (-> (mdo [e reader/ask
-                       :let [a (inc e)]]
-                      (return (dec a)))
-                 (reader/run 1)))))
-
-  (testing "state test"
-    (is (= [0 12] (-> (mdo [s state/get
-                            _ (state/put 10)
-                            :let [a (inc s)]
-                            _ (state/modify (partial + a))]
-                           (return (dec s)))
-                      (state/run 1)))))
-
-  (testing "app test"
-    (is (= {:result 16 :env 1 :state 15 :log [13]}
-           (-> (mdo [e app/env
-                     s app/state
-                     s (app/run (app/put (+ s 11)))
-                     s (app/log s)
-                     s (app/modify (partial + s))]
+  (testing "effect test"
+    (is (= {:result 16 :env 1 :state 15 :out [13]}
+           (-> (mdo [e env
+                     s state
+                     s (local (put (+ s 11)))
+                     s (out s)
+                     s (modify + s)]
                     (return (+ e s)))
-               (app/run-app :env 1 :state 2 :log []))))))
+               (run :env 1 :state 2 :out []))))))
