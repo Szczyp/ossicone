@@ -1,14 +1,14 @@
 (ns nuejure.test
   #+clj (:require
          [clojure.test :as t :refer [is deftest with-test run-tests testing]]
-         [nuejure.core :refer [mapf return ap bind mdo]]
+         [nuejure :refer [mapf return ap bind mdo]]
          [nuejure.effect :refer [env state local out put modify run]])
   #+cljs (:require-macros
           [cemerick.cljs.test :refer [is deftest with-test run-tests testing]]
-          [nuejure.core :refer [mdo]])
+          [nuejure.monad :refer [mdo]])
   #+cljs (:require
           [cemerick.cljs.test :as t]
-          [nuejure.core :refer [mapf return ap bind]]
+          [nuejure :refer [mapf return ap bind]]
           [nuejure.effect :refer [env state local out put modify run]]))
 
 (deftest a-test
@@ -28,7 +28,7 @@
            (-> (mdo [e env
                      s state
                      s (local (put (+ s 11)))
-                     s (out s)
+                     _ (out s)
                      s (modify + s)]
                     (return (+ e s)))
                (run :env 1 :state 2 :out []))))))

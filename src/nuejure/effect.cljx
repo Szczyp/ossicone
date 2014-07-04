@@ -1,7 +1,9 @@
 (ns nuejure.effect
   (:require
-   [nuejure.protocols :as p]
-   [nuejure.core :refer [update]]))
+   [nuejure :refer [update]]
+   [nuejure.functor :refer [Functor]]
+   [nuejure.applicative :refer [Applicative]]
+   [nuejure.monad :refer [Monad]]))
 
 (deftype Effect [effect-fn])
 
@@ -15,17 +17,17 @@
      (run m (apply hash-map k v kvs))))
 
 (extend-type Effect
-  p/Functor
-  (mapf [this f] (effect (fn [s] (update (run this s) :result f))))
-  p/Applicative
-  (return [this a] (effect (fn [s] (assoc s :result a))))
-  (ap [this a]
+  Functor
+  (mapf* [this f] (effect (fn [s] (update (run this s) :result f))))
+  Applicative
+  (return* [this a] (effect (fn [s] (assoc s :result a))))
+  (ap* [this a]
     (effect (fn [s]
               (let [{f :result :as s} (run this s)
                     s (run a s)]
                 (update s :result f)))))
-  p/Monad
-  (join [this]
+  Monad
+  (join* [this]
     (effect (fn [s]
               (let [{m :result :as s} (run this s)]
                 (run m s))))))
