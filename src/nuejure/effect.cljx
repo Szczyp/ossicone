@@ -13,6 +13,7 @@
   ([m s]
      #+clj ((.effect-fn m) s)
      #+cljs (.effect-fn m s))
+  ([m] (run m {}))
   ([m k v & kvs]
      (run m (apply hash-map k v kvs))))
 
