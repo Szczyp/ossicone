@@ -2,9 +2,9 @@
   (:require
    [nuejure.return :refer [return return? value]]
    [nuejure.functor :refer [mapf]])
-  #+clj (:import
-         [nuejure.return Return]
-         [clojure.lang
+  (:import
+   [nuejure.return Return]
+   #+clj [clojure.lang
           PersistentList PersistentVector LazySeq
           MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
           Fn Keyword
@@ -29,9 +29,9 @@
   LazySeq
   (return* [this a] (lazy-seq (list a)))
   (ap* [this that] (for [f this a that] (f a)))
-  MapEntry
-  (return* [[k _] a] (MapEntry. k a))
-  (ap* [[k f] [_ v]] (MapEntry. k (f v)))
+  #+clj MapEntry
+  #+clj (return* [[k _] a] (MapEntry. k a))
+  #+clj (ap* [[k f] [_ v]] (MapEntry. k (f v)))
   PersistentHashMap
   (return* [this a] (apply hash-map a))
   (ap* [this that] (into (hash-map)

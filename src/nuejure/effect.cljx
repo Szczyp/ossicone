@@ -1,6 +1,6 @@
 (ns nuejure.effect
   (:require
-   [nuejure :refer [update]]
+   [nuejure.core :refer [update]]
    [nuejure.functor :refer [Functor]]
    [nuejure.applicative :refer [Applicative]]
    [nuejure.monad :refer [Monad]]))
@@ -10,10 +10,10 @@
 (def effect ->Effect)
 
 (defn run
+  ([m] (run m {}))
   ([m s]
      #+clj ((.effect-fn m) s)
      #+cljs (.effect-fn m s))
-  ([m] (run m {}))
   ([m k v & kvs]
      (run m (apply hash-map k v kvs))))
 

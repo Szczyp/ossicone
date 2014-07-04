@@ -3,11 +3,11 @@
    [nuejure.return :refer [return? value]]
    [nuejure.functor :refer [mapf]]
    [nuejure.applicative :refer [return*]])
-  #+clj (:import
-         [nuejure.return Return]
-         [clojure.lang
+  (:import
+   [nuejure.return Return]
+   #+clj [clojure.lang
           PersistentList PersistentVector LazySeq
-          MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
+          PersistentHashMap PersistentArrayMap PersistentTreeMap
           Fn Keyword
           PersistentHashSet PersistentTreeSet]))
 
