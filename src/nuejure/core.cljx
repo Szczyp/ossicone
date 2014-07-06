@@ -23,9 +23,21 @@
 
 (def bind m/bind)
 
-(defmacro mdo [bindings body]
-  `(m/mdo ~bindings ~body))
-
 (def fold l/fold)
 
 (def traverse t/traverse)
+
+(defmacro mdo [& body]
+  `(fold #(mapf (fn [_# a#] a#) % %2)
+         (return nil)
+         (list ~@body)))
+
+(defmacro mlet [bindings & body]
+  (if (and (vector? bindings) (even? (count bindings)))
+    (if (seq bindings)
+      (let [[sym val] bindings
+            cont `(mlet ~(subvec bindings 2) ~@body)]
+        `(bind ~val (fn [~sym] ~cont)))
+      `(mdo ~@body))
+    (throw (IllegalArgumentException.
+            "bindings has to be a vector with even number of elements."))))

@@ -1,9 +1,9 @@
 (ns nuejure.functor
   (:require
-   [nuejure.return :refer [return]])
-  (:import
-   [nuejure.return Return]
-   #+clj [clojure.lang
+   [nuejure.return :refer [return #+cljs Return]])
+  #+clj (:import 
+         [nuejure.return Return]
+         [clojure.lang
           PersistentList PersistentVector LazySeq
           MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
           Fn Keyword

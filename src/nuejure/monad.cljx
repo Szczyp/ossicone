@@ -1,11 +1,11 @@
 (ns nuejure.monad
   (:require
-   [nuejure.return :refer [return? value]]
+   [nuejure.return :refer [return? value #+cljs Return]]
    [nuejure.functor :refer [mapf]]
    [nuejure.applicative :refer [return*]])
-  (:import
-   [nuejure.return Return]
-   #+clj [clojure.lang
+  #+clj (:import
+         [nuejure.return Return]
+         [clojure.lang
           PersistentList PersistentVector LazySeq
           PersistentHashMap PersistentArrayMap PersistentTreeMap
           Fn Keyword
@@ -32,19 +32,7 @@
 
 (defn bind
   ([m f]
-     (let [coerce-return #(if (return? %)
-                            (return* m (#+clj .value #+cljs .-value %)) %)]
+     (let [coerce-return #(if (return? %) (return* m (value %)) %)]
        (join* (mapf (comp coerce-return f) m))))
   ([m f & fs] (apply bind (bind m f) fs)))
 
-(defmacro mdo [bindings body]
-  (if (and (vector? bindings) (even? (count bindings)))
-    (if (seq bindings)
-      (let [[sym val] bindings
-            cont `(mdo ~(subvec bindings 2) ~body)]
-        (if (= sym :let)
-          `(let ~val ~cont)
-          `(bind ~val (fn [~sym] ~cont))))
-      body)
-    (throw (IllegalArgumentException.
-            "bindings has to be a vector with even number of elements."))))

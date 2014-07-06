@@ -1,10 +1,10 @@
 (ns nuejure.applicative
   (:require
-   [nuejure.return :refer [return return? value]]
+   [nuejure.return :refer [return return? value #+cljs Return]]
    [nuejure.functor :refer [mapf]])
-  (:import
-   [nuejure.return Return]
-   #+clj [clojure.lang
+  #+clj (:import
+         [nuejure.return Return]
+         [clojure.lang
           PersistentList PersistentVector LazySeq
           MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
           Fn Keyword
