@@ -2,7 +2,7 @@
   (:require
    [nuejure.core :refer [update]]
    [nuejure.functor :refer [Functor]]
-   [nuejure.applicative :refer [Applicative]]
+   [nuejure.applicative :refer [Applicative coerce-return]]
    [nuejure.monad :refer [Monad]]))
 
 (deftype Effect [effect-fn])
@@ -12,8 +12,9 @@
 (defn run
   ([m] (run m {}))
   ([m s]
-     #+clj ((.effect-fn m) s)
-     #+cljs (.effect-fn m s))
+     (let [[m] (coerce-return m (effect nil))]
+       #+clj ((.effect-fn m) s)
+       #+cljs (.effect-fn m s)))
   ([m k v & kvs]
      (run m (apply hash-map k v kvs))))
 
@@ -57,8 +58,8 @@
 
 (defn local [m & kvs]
   (effect (fn [s]
-            (let [s (reduce (fn [s [k v]]
+            (let [s' (reduce (fn [s [k v]]
                               (update s k v))
                             s
                             (partition 2 kvs))]
-              (assoc s :result (:result (run m s)))))))
+              (assoc s :result (:result (run m s')))))))

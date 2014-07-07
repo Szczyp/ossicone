@@ -1,8 +1,7 @@
 (ns nuejure.traversable
   (:require
-   [nuejure.return :refer [return]]
    [nuejure.functor :refer [mapf]]
-   [nuejure.applicative :refer [ap]]
+   [nuejure.applicative :refer [ap return]]
    [nuejure.foldable :refer [fold]])
   #+clj (:import
          [clojure.lang

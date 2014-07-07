@@ -1,8 +1,5 @@
 (ns nuejure.functor
-  (:require
-   [nuejure.return :refer [return #+cljs Return]])
   #+clj (:import 
-         [nuejure.return Return]
          [clojure.lang
           PersistentList PersistentVector LazySeq
           MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
@@ -13,8 +10,6 @@
   (mapf* [this f]))
 
 (extend-protocol Functor
-  Return
-  (mapf* [this f] (return (f (#+clj .value #+cljs .-value this))))
   #+clj PersistentList #+cljs List
   (mapf* [this f] (apply list (map f this)))
   PersistentVector

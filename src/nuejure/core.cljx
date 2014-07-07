@@ -1,6 +1,5 @@
 (ns nuejure.core
   (:require
-   [nuejure.return :as r]
    [nuejure.functor :as f]
    [nuejure.applicative :as a]
    [nuejure.monad :as m :include-macros true]
@@ -13,7 +12,7 @@
   ([m k f x1 x2] (assoc m k (f (get m k) x1 x2)))
   ([m k f x1 x2 & xs] (assoc m k (apply f (get m k) x1 x2 xs))))
 
-(def return r/return)
+(def return a/return)
 
 (defn mapf
   ([f a] (f/mapf f a))

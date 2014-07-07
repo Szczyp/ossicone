@@ -1,25 +1,41 @@
 (ns nuejure.applicative
   (:require
-   [nuejure.return :refer [return return? value #+cljs Return]]
-   [nuejure.functor :refer [mapf]])
+   [nuejure.functor :refer [mapf Functor]])
   #+clj (:import
-         [nuejure.return Return]
          [clojure.lang
           PersistentList PersistentVector LazySeq
           MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
           Fn Keyword
           PersistentHashSet PersistentTreeSet]))
 
+(deftype Return [value]
+  Object
+  (toString [this] (str value)))
+
 (defprotocol Applicative
   (return* [this a])
   (ap* [this that]))
 
+(defn return? [a] (= (type a) Return))
+
+(def return ->Return)
+
+(defn value [r] (#+clj .value #+cljs .-value r))
+
+(defn coerce-return [a b]
+  (case [(return? a) (return? b)]
+    [true false] [(return* b (value a)) b]
+    [false true] [a (return* a (value b))]
+    [a b]))
+
+(extend-type Return
+  Functor
+  (mapf* [this f] (return (f (value this)))))
+
 (extend-protocol Applicative
   Return
   (return* [this a] (return a))
-  (ap* [this a] (if (= (type a) Return)
-                  (return ((value this) (value a)))
-                  (ap* (return* a (value this)) a)))
+  (ap* [this a] (return ((value this) (value a))))
   #+clj PersistentList #+cljs List
   (return* [this a] (list a))
   (ap* [this that] (apply list (for [f this a that] (f a))))
@@ -58,9 +74,7 @@
   (ap* [this that] #((this %) (that %))))
 
 (defn ap [f & as]
-  (letfn [(ap ([f a] (if (return? a)
-                       (ap* f (return* f (value a)))
-                       (ap* f a)))
+  (letfn [(ap ([f a] (apply ap* (coerce-return f a)))
             ([f a & as] (apply ap (ap f a) as)))
           (curry [n f] ((apply partial (replicate n partial)) f))]
     (apply ap (mapf (partial curry (count as)) f) as)))

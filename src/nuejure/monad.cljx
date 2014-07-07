@@ -1,10 +1,9 @@
 (ns nuejure.monad
   (:require
-   [nuejure.return :refer [return? value #+cljs Return]]
    [nuejure.functor :refer [mapf]]
-   [nuejure.applicative :refer [return*]])
+   [nuejure.applicative :refer [coerce-return value #+cljs Return]])
   #+clj (:import
-         [nuejure.return Return]
+         [nuejure.applicative Return]
          [clojure.lang
           PersistentList PersistentVector LazySeq
           PersistentHashMap PersistentArrayMap PersistentTreeMap
@@ -31,8 +30,6 @@
   (join* [this] #((this %) %)))
 
 (defn bind
-  ([m f]
-     (let [coerce-return #(if (return? %) (return* m (value %)) %)]
-       (join* (mapf (comp coerce-return f) m))))
+  ([m f] (join* (mapf (comp second (partial coerce-return m) f) m)))
   ([m f & fs] (apply bind (bind m f) fs)))
 
