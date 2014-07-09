@@ -31,5 +31,5 @@
 
 (defn bind
   ([m f] (join* (mapf (comp second (partial coerce-return m) f) m)))
-  ([m f & fs] (apply bind (bind m f) fs)))
+  ([m f & fs] (reduce bind m (cons f fs))))
 

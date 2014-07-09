@@ -75,6 +75,6 @@
 
 (defn ap [f & as]
   (letfn [(ap ([f a] (apply ap* (coerce-return f a)))
-            ([f a & as] (apply ap (ap f a) as)))
+            ([f a & as] (reduce ap f (cons a as))))
           (curry [n f] ((apply partial (replicate n partial)) f))]
     (apply ap (mapf (partial curry (count as)) f) as)))
