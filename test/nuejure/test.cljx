@@ -2,14 +2,14 @@
   #+clj (:require
          [clojure.test :as t :refer [is deftest with-test run-tests testing]]
          [nuejure.core :refer [mlet mdo mapf return ap bind traverse]]
-         [nuejure.effect :refer [env state local out put modify run]])
+         [nuejure.effect :refer [env state local log put modify run]])
   #+cljs (:require-macros
           [cemerick.cljs.test :refer [is deftest with-test run-tests testing]]
           [nuejure.core :refer [mlet mdo]])
   #+cljs (:require
           [cemerick.cljs.test :as t]
           [nuejure.core :refer [mapf return ap bind traverse]]
-          [nuejure.effect :refer [env state local out put modify run]]))
+          [nuejure.effect :refer [env state local log put modify run]]))
 
 (deftest test-all
   (testing "monad test"
@@ -24,14 +24,14 @@
                  (f 3)))))
 
   (testing "effect test"
-    (is (= {:result {:a 3 :b 16} :env 1 :state 15 :out [14]}
+    (is (= {:result {:a 3 :b 16} :env 1 :state 15 :log [14]}
            (let [m (mlet [e env
                           s state
                           s (local (put (+ s 11)))]
-                     (out s)
+                     (log s)
                      (put 1)
                      (mlet [s (modify + s)]
                        (return (+ e s))))]
              (as-> (sorted-map :a (put 3) :b m) _
                    (traverse _)
-                   (run _ :env 1 :state 2 :out [])))))))
+                   (run _ :env 1 :state 2 :log [])))))))

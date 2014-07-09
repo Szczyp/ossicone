@@ -40,9 +40,6 @@
 (def state
   (effect (fn [s] (assoc s :result (:state s)))))
 
-(def env+state
-  (effect (fn [s] (assoc s :result (merge (:env s) (:state s))))))
-
 (defn put [ns]
   (effect (fn [s] (assoc s :state ns :result ns))))
 
@@ -51,10 +48,10 @@
             (let [ns (apply f (:state s) args)]
               (assoc s :state ns :result ns)))))
 
-(defn out [m]
+(defn log [m]
   (effect (fn [s]
-            (-> (update s :out conj m)
-                (assoc :result m)))))
+            (-> (update s :log conj m)
+                (assoc :result nil)))))
 
 (defn local [m & kvs]
   (effect (fn [s]
