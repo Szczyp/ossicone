@@ -26,10 +26,12 @@
 
 (def traverse t/traverse)
 
-(defmacro mdo [& body]
-  `(fold #(mapf (fn [_# a#] a#) % %2)
-         (return nil)
-         (list ~@body)))
+(defn compm [f & fs]
+  (let [[f & fs] (reverse (cons f fs))]
+    (fn [a] (apply bind (f a) fs)))) 
+
+(defn mdo [& ms]
+  (reduce #(mapf (fn [_ a] a) % %2) (return nil) ms))
 
 (defmacro mlet [bindings & body]
   (if (and (vector? bindings) (even? (count bindings)))
