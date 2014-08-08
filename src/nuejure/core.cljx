@@ -43,11 +43,9 @@
     (throw (IllegalArgumentException.
             "bindings has to be a vector with even number of elements."))))
 
-(defn- threadf [lift f & transforms]
-  `(->> ~f ~@(map lift transforms)))
+(defmacro f->> [f & transforms]
+  `(mapf #(->> % ~@transforms) ~f))
 
-(defmacro f->> [& body]
-  (apply threadf (fn [t] `(mapf (partial ~@t))) body))
+(defmacro f-> [f & transforms]
+  `(mapf #(-> % ~@transforms) ~f))
 
-(defmacro f-> [& body]
-  (apply threadf (fn [[f & args]] `(mapf #(~f % ~@args))) body))
