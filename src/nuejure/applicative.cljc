@@ -1,12 +1,12 @@
 (ns nuejure.applicative
   (:require
    [nuejure.functor :refer [mapf Functor]])
-  #+clj (:import
-         [clojure.lang
-          PersistentList PersistentVector LazySeq
-          MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
-          Fn Keyword
-          PersistentHashSet PersistentTreeSet]))
+  #?(:clj (:import
+           [clojure.lang
+            PersistentList PersistentVector LazySeq
+            MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
+            Fn Keyword
+            PersistentHashSet PersistentTreeSet])))
 
 (deftype Return [value]
   Object
@@ -20,7 +20,7 @@
 
 (def return ->Return)
 
-(defn value [r] (#+clj .value #+cljs .-value r))
+(defn value [r] (#?(:clj .value :cljs .-value) r))
 
 (defn coerce-return [a b]
   (case [(return? a) (return? b)]
@@ -36,7 +36,7 @@
   Return
   (return* [this a] (return a))
   (ap* [this a] (return ((value this) (value a))))
-  #+clj PersistentList #+cljs List
+  #?(:clj PersistentList :cljs List)
   (return* [this a] (list a))
   (ap* [this that] (apply list (for [f this a that] (f a))))
   PersistentVector
@@ -45,9 +45,9 @@
   LazySeq
   (return* [this a] (lazy-seq (list a)))
   (ap* [this that] (for [f this a that] (f a)))
-  #+clj MapEntry
-  #+clj (return* [[k _] a] (MapEntry. k a))
-  #+clj (ap* [[k f] [_ v]] (MapEntry. k (f v)))
+  #?(:clj MapEntry)
+  #?(:clj (return* [[k _] a] (MapEntry. k a)))
+  #?(:clj (ap* [[k f] [_ v]] (MapEntry. k (f v))))
   PersistentHashMap
   (return* [this a] (apply hash-map a))
   (ap* [this that] (into (hash-map)
@@ -66,7 +66,7 @@
   PersistentHashSet
   (return* [this a] (hash-set a))
   (ap* [this that] (apply hash-set (for [f this a that] (f a))))
-  #+clj Fn #+cljs function
+  #?(:clj Fn :cljs function)
   (return* [this f] (constantly f))
   (ap* [this that] #((this %) (that %)))
   Keyword

@@ -1,15 +1,15 @@
 (ns nuejure.foldable
-  #+clj (:import
-         [clojure.lang
-          PersistentList PersistentVector LazySeq
-          PersistentHashMap PersistentArrayMap PersistentTreeMap
-          PersistentHashSet PersistentTreeSet]))
+  #?(:clj (:import
+            [clojure.lang
+             PersistentList PersistentVector LazySeq
+             PersistentHashMap PersistentArrayMap PersistentTreeMap
+             PersistentHashSet PersistentTreeSet])))
 
 (defprotocol Foldable
   (fold* [this f z]))
 
 (extend-protocol Foldable
-  #+clj PersistentList #+cljs List
+  #?(:clj PersistentList :cljs List)
   (fold* [this f z] (reduce f z this))
   PersistentVector
   (fold* [this f z] (reduce f z this))

@@ -3,17 +3,17 @@
    [nuejure.functor :refer [mapf]]
    [nuejure.applicative :refer [ap return]]
    [nuejure.foldable :refer [fold]])
-  #+clj (:import
-         [clojure.lang
-          PersistentList PersistentVector LazySeq
-          PersistentHashMap PersistentArrayMap PersistentTreeMap
-          PersistentHashSet PersistentTreeSet]))
+  #?(:clj (:import
+            [clojure.lang
+             PersistentList PersistentVector LazySeq
+             PersistentHashMap PersistentArrayMap PersistentTreeMap
+             PersistentHashSet PersistentTreeSet])))
 
 (defprotocol Traversable
   (traverse* [this]))
 
 (extend-protocol Traversable
-  #+clj PersistentList #+cljs List
+  #?(:clj PersistentList :cljs List)
   (traverse* [this]
     (mapf reverse
           (fold (fn [s a]

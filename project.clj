@@ -6,37 +6,28 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.6.0"]]
-  
-  :source-paths ["src" "target/classes"]
+  :dependencies []
 
-  :test-paths ["target/test-classes"]
+  :source-paths ["src"]
 
-  :profiles
-  {:dev
-   {:dependencies [[org.clojure/clojurescript "0.0-2227"]]
+  :test-paths ["test"]
 
-    :plugins [[com.keminglabs/cljx "0.4.0"]
-              [lein-cljsbuild "1.0.3"]
-              [com.cemerick/austin "0.1.4"]
-              [com.cemerick/clojurescript.test "0.3.1"]]
+  :cljsbuild {:test-commands {"test" ["node" "output/tests.js"]}
+              :builds [{:id "test"
+                        :source-paths ["src" "test"]
+                        :notify-command ["node" "output/tests.js"]
+                        :compiler {:output-to "output/tests.js"
+                                   :output-dir "output"
+                                   :static-fns true
+                                   :source-map true
+                                   :cache-analysis false
+                                   :main nuejure.runner
+                                   :optimizations :none
+                                   :target :nodejs
+                                   :pretty-print true}}]}
 
-    :hooks [cljx.hooks leiningen.cljsbuild]
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.7.0-RC1"]
+                                  [org.clojure/clojurescript "0.0-3269"]]
 
-    :cljx {:builds [{:source-paths ["src"]
-                     :output-path "target/classes"
-                     :rules :clj}
-                    {:source-paths ["src"]
-                     :output-path "target/classes"
-                     :rules :cljs}
-                    {:source-paths ["test"]
-                     :output-path "target/test-classes"
-                     :rules :clj}
-                    {:source-paths ["test"]
-                     :output-path "target/test-classes"
-                     :rules :cljs}]}
-
-    :cljsbuild {:builds [{:source-paths ["target/classes" "target/test-classes"]
-                          :compiler {:output-to "target/testable.js"
-                                     :optimizations :whitespace}}]
-                :test-commands {"phantom" ["phantomjs" :runner "target/testable.js"]}}}})
+                   :plugins [[lein-cljsbuild "1.0.6"]
+                             [com.cemerick/austin "0.1.6"]]}})

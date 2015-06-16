@@ -1,6 +1,5 @@
 (ns nuejure.effect
   (:require
-   [nuejure.core :refer [update]]
    [nuejure.functor :refer [Functor]]
    [nuejure.applicative :refer [Applicative coerce-return]]
    [nuejure.monad :refer [Monad]]))
@@ -13,8 +12,8 @@
   ([m] (run m {}))
   ([m s]
      (let [[m] (coerce-return m (effect nil))]
-       #+clj ((.effect-fn m) s)
-       #+cljs (.effect-fn m s)))
+       #?(:clj ((.effect-fn m) s)
+          :cljs (.effect-fn m s))))
   ([m k v & kvs]
      (run m (apply hash-map k v kvs))))
 
