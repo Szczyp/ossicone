@@ -55,7 +55,7 @@
 (defn local [m & kvs]
   (effect (fn [s]
             (let [s' (reduce (fn [s [k v]]
-                              (update s k v))
-                            s
-                            (partition 2 kvs))]
-              (assoc s :result (:result (run m s')))))))
+                               (update s k v))
+                             s
+                             (partition 2 kvs))]
+              (merge s (select-keys (run m s') [:result :state]))))))
