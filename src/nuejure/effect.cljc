@@ -52,10 +52,7 @@
             (-> (update s :log conj m)
                 (assoc :result nil)))))
 
-(defn local [m & kvs]
+(defn local [m k & vs]
   (effect (fn [s]
-            (let [s' (reduce (fn [s [k v]]
-                               (update s k v))
-                             s
-                             (partition 2 kvs))]
+            (let [s' (apply update-in s [:env k] vs)]
               (merge s (select-keys (run m s') [:result :state]))))))
