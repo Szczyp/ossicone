@@ -1,10 +1,10 @@
-(ns nuejure.functor
+(ns ossicone.functor
   #?(:clj (:import
-            [clojure.lang
-             PersistentList PersistentVector LazySeq
-             MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
-             Fn Keyword
-             PersistentHashSet PersistentTreeSet])))
+           [clojure.lang
+            PersistentList PersistentVector LazySeq
+            MapEntry PersistentHashMap PersistentArrayMap PersistentTreeMap
+            Fn Keyword
+            PersistentHashSet PersistentTreeSet])))
 
 (defprotocol Functor
   (mapf* [this f]))

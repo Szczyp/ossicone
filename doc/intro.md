@@ -1,3 +1,3 @@
-# Introduction to nuejure
+# Introduction to ossicone
 
 TODO: write [great documentation](http://jacobian.org/writing/great-documentation/what-to-write/)

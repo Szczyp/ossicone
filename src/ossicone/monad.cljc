@@ -1,14 +1,14 @@
-(ns nuejure.monad
+(ns ossicone.monad
   (:require
-   [nuejure.functor :refer [mapf]]
-   [nuejure.applicative :refer [coerce-return value #?(:cljs Return)]])
+   [ossicone.functor :refer [mapf]]
+   [ossicone.applicative :refer [coerce-return value #?(:cljs Return)]])
   #?(:clj (:import
-            [nuejure.applicative Return]
-            [clojure.lang
-             PersistentList PersistentVector LazySeq
-             PersistentHashMap PersistentArrayMap PersistentTreeMap
-             Fn Keyword
-             PersistentHashSet PersistentTreeSet])))
+           [ossicone.applicative Return]
+           [clojure.lang
+            PersistentList PersistentVector LazySeq
+            PersistentHashMap PersistentArrayMap PersistentTreeMap
+            Fn Keyword
+            PersistentHashSet PersistentTreeSet])))
 
 (defprotocol Monad
   (join* [this]))
@@ -32,4 +32,3 @@
 (defn bind
   ([m f] (join* (mapf (comp second (partial coerce-return m) f) m)))
   ([m f & fs] (reduce bind m (cons f fs))))
-

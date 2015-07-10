@@ -1,7 +1,7 @@
 with import <nixpkgs> { };
 
 stdenv.mkDerivation {
-  name = "nuejure";
+  name = "ossicone";
 
   buildInputs = [leiningen phantomjs nodejs];
 }

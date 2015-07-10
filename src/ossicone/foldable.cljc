@@ -1,9 +1,9 @@
-(ns nuejure.foldable
+(ns ossicone.foldable
   #?(:clj (:import
-            [clojure.lang
-             PersistentList PersistentVector LazySeq
-             PersistentHashMap PersistentArrayMap PersistentTreeMap
-             PersistentHashSet PersistentTreeSet])))
+           [clojure.lang
+            PersistentList PersistentVector LazySeq
+            PersistentHashMap PersistentArrayMap PersistentTreeMap
+            PersistentHashSet PersistentTreeSet])))
 
 (defprotocol Foldable
   (fold* [this f z]))
@@ -28,4 +28,3 @@
 
 (defn fold [f z s]
   (fold* s f z))
-

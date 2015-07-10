@@ -1,6 +1,6 @@
-(ns nuejure.applicative
+(ns ossicone.applicative
   (:require
-   [nuejure.functor :refer [mapf Functor]])
+   [ossicone.functor :refer [mapf Functor]])
   #?(:clj (:import
            [clojure.lang
             PersistentList PersistentVector LazySeq
@@ -51,18 +51,18 @@
   PersistentHashMap
   (return* [this a] (apply hash-map a))
   (ap* [this that] (into (hash-map)
-                        (for [[k f] this]
-                          [k (f (k that))])))
+                         (for [[k f] this]
+                           [k (f (k that))])))
   PersistentArrayMap
   (return* [this a] (apply hash-map a))
   (ap* [this that] (into (hash-map)
-                        (for [[k f] this]
-                          [k (f (k that))])))
+                         (for [[k f] this]
+                           [k (f (k that))])))
   PersistentTreeMap
   (return* [this a] (apply sorted-map a))
   (ap* [this that] (into (sorted-map)
-                        (for [[k f] this]
-                          [k (f (k that))])))
+                         (for [[k f] this]
+                           [k (f (k that))])))
   PersistentHashSet
   (return* [this a] (hash-set a))
   (ap* [this that] (apply hash-set (for [f this a that] (f a))))

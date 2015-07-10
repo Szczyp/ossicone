@@ -1,7 +1,5 @@
-(defproject nuejure "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-
-  :url "http://example.com/FIXME"
+(defproject ossicone "0.1.0-SNAPSHOT"
+  :description "Functors, Applicatives, Monads"
 
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -22,7 +20,7 @@
                                    :static-fns true
                                    :source-map true
                                    :cache-analysis false
-                                   :main nuejure.runner
+                                   :main ossicone.runner
                                    :optimizations :none
                                    :target :nodejs
                                    :pretty-print true}}]}

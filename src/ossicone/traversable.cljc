@@ -1,13 +1,13 @@
-(ns nuejure.traversable
+(ns ossicone.traversable
   (:require
-   [nuejure.functor :refer [mapf]]
-   [nuejure.applicative :refer [ap return]]
-   [nuejure.foldable :refer [fold]])
+   [ossicone.functor :refer [mapf]]
+   [ossicone.applicative :refer [ap return]]
+   [ossicone.foldable :refer [fold]])
   #?(:clj (:import
-            [clojure.lang
-             PersistentList PersistentVector LazySeq
-             PersistentHashMap PersistentArrayMap PersistentTreeMap
-             PersistentHashSet PersistentTreeSet])))
+           [clojure.lang
+            PersistentList PersistentVector LazySeq
+            PersistentHashMap PersistentArrayMap PersistentTreeMap
+            PersistentHashSet PersistentTreeSet])))
 
 (defprotocol Traversable
   (traverse* [this]))

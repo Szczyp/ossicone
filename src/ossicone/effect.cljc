@@ -1,8 +1,8 @@
-(ns nuejure.effect
+(ns ossicone.effect
   (:require
-   [nuejure.functor :refer [Functor]]
-   [nuejure.applicative :refer [Applicative coerce-return]]
-   [nuejure.monad :refer [Monad]]))
+   [ossicone.functor :refer [Functor]]
+   [ossicone.applicative :refer [Applicative coerce-return]]
+   [ossicone.monad :refer [Monad]]))
 
 (deftype Effect [effect-fn])
 
@@ -11,11 +11,11 @@
 (defn run
   ([m] (run m {}))
   ([m s]
-     (let [[m] (coerce-return m (effect nil))]
-       #?(:clj ((.effect-fn m) s)
-          :cljs (.effect-fn m s))))
+   (let [[m] (coerce-return m (effect nil))]
+     #?(:clj ((.effect-fn m) s)
+             :cljs (.effect-fn m s))))
   ([m k v & kvs]
-     (run m (apply hash-map k v kvs))))
+   (run m (apply hash-map k v kvs))))
 
 (extend-type Effect
   Functor

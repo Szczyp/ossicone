@@ -1,6 +1,6 @@
-# nuejure
+# ossicone
 
-A Clojure library designed to ... well, that part is up to you.
+Functors, Applicatives, Monads.
 
 ## Usage
 

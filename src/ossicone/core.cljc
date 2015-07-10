@@ -1,11 +1,11 @@
-(ns nuejure.core
-  #?(:cljs (:require-macros [nuejure.core :refer [mlet f-> f->>]]))
+(ns ossicone.core
+  #?(:cljs (:require-macros [ossicone.core :refer [mlet f-> f->>]]))
   (:require
-   [nuejure.functor :as f]
-   [nuejure.applicative :as a]
-   [nuejure.monad :as m]
-   [nuejure.foldable :as l]
-   [nuejure.traversable :as t]))
+   [ossicone.functor :as f]
+   [ossicone.applicative :as a]
+   [ossicone.monad :as m]
+   [ossicone.foldable :as l]
+   [ossicone.traversable :as t]))
 
 (def return a/return)
 
