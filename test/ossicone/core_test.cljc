@@ -19,14 +19,16 @@
                  (f 3)))))
 
   (testing "effect test"
-    (is (= {:result {:a 3 :b 16} :env 1 :state 15 :log [14]}
+    (is (= {:result {:a 3, :b 8} :state 4 :env 1 :log [3]}
            (let [m (mlet [e env
                           s state
-                          s (local (put (+ s 11)))]
+                          l (local (mlet [e env]
+                                     (return (inc e)))
+                                   inc)]
                      (log s)
                      (put 1)
                      (mlet [s (modify + s)]
-                       (return (+ e s))))]
+                       (return (+ e s l))))]
              (as-> (sorted-map :a (put 3) :b m) _
                (traverse _)
-               (run _ :env 1 :state 2 :log [])))))))
+               (run _ :env 1 :state 20 :log [])))))))
