@@ -53,5 +53,5 @@
 
 (defn local [m f & args]
   (effect (fn [s]
-            (let [ns (assoc s :env (apply f (:env s) args))]
+            (let [ns (apply update s :env f args)]
               (merge s (select-keys (run m ns) [:result :state]))))))
